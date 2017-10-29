@@ -1,0 +1,47 @@
+{
+    "name": "superbig/template-select",
+    "description": "A fieldtype that allows you to select a template from a dropdown.",
+    "type": "craft-plugin",
+    "version": "2.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "template select"
+    ],
+    "support": {
+        "docs": "https://github.com/sjelfull/template-select/blob/master/README.md",
+        "issues": "https://github.com/sjelfull/template-select/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Superbig",
+            "homepage": "https://superbig.co"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "~3.0.0-beta.23"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+          "superbig\\templateselect\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Template Select",
+        "handle": "template-select",
+        "schemaVersion": "2.0.0",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/sjelfull/template-select/master/CHANGELOG.md",
+        "class": "superbig\\templateselect\\TemplateSelect"
+    }
+}
