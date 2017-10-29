@@ -2,7 +2,7 @@
 
 A fieldtype that allows you to select a template from the site templates folder.
 
-![Screenshot](resources/img/field-screenshot@2x.png)
+![Screenshot](resources/img/field-screenshot@2x.png | width=253 )
 
 ## Requirements
 
@@ -28,7 +28,7 @@ You may limit the template list to a subfolder of the site template folder.
 
 The path is relative, i.e. _subfolder/subfolder2/_.
 
-![Subfolder](resources/img/field-config@2x.png)
+![Subfolder](resources/img/field-config@2x.png | width=733)
 
 ## Using Template Select
 
