@@ -2,7 +2,7 @@
 
 A fieldtype that allows you to select a template from the site templates folder.
 
-![Screenshot](resources/img/field-screenshot.png)
+![Screenshot](resources/img/field-screenshot@2x.png)
 
 ## Requirements
 
