@@ -24,6 +24,10 @@ To install the plugin, follow these instructions.
 
 ## Configuring Template Select
 
+You may limit the template list to a subfolder of the site template folder.
+
+The path is relative, i.e. _subfolder/subfolder2/_.
+
 ![Subfolder](resources/img/field-config@2x.png)
 
 ## Using Template Select
