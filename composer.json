@@ -1,5 +1,5 @@
 {
-    "name": "superbig/template-select",
+    "name": "superbig/craft3-templateselect",
     "description": "A fieldtype that allows you to select a template from a dropdown.",
     "type": "craft-plugin",
     "version": "2.0.0",
@@ -11,8 +11,8 @@
         "template select"
     ],
     "support": {
-        "docs": "https://github.com/sjelfull/template-select/blob/master/README.md",
-        "issues": "https://github.com/sjelfull/template-select/issues"
+        "docs": "https://github.com/sjelfull/craft3-templateselect/blob/master/README.md",
+        "issues": "https://github.com/sjelfull/craft3-templateselect/issues"
     },
     "license": "MIT",
     "authors": [
@@ -41,7 +41,7 @@
         "schemaVersion": "2.0.0",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/sjelfull/template-select/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/sjelfull/craft3-templateselect/master/CHANGELOG.md",
         "class": "superbig\\templateselect\\TemplateSelect"
     }
 }
