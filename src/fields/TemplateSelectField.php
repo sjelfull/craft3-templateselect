@@ -111,7 +111,10 @@ class TemplateSelectField extends Field
         if ( !empty($limitToSubfolder) ) {
             $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . ltrim(rtrim($limitToSubfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
-
+        
+        // Normalize the path so it also works as intended in Windows
+        $templatesPath = FileHelper::normalizePath($templatesPath);
+        
         // Check if folder exists, or give error
         if ( !file_exists($templatesPath) ) {
             throw new \InvalidArgumentException('(Template Select) Folder doesn\'t exist: ' . $templatesPath);
