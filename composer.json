@@ -2,7 +2,7 @@
     "name": "superbig/craft3-templateselect",
     "description": "A fieldtype that allows you to select a template from a dropdown.",
     "type": "craft-plugin",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "keywords": [
         "craft",
         "cms",
