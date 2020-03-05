@@ -131,9 +131,6 @@ class TemplateSelectField extends Field
             'caseSensitive' => false,
         ]);
 
-        // Add placeholder for when there is no template selected
-        $filteredTemplates = [ '' => Craft::t('template-select', 'No template selected') ];
-
         // Iterate over template list
         foreach ($templates as $path) {
             $path            = FileHelper::normalizePath($path);
@@ -157,6 +154,12 @@ class TemplateSelectField extends Field
 
         // Sort alphabetically
         asort($filteredTemplates);
+
+        // Add placeholder for when there is no template selected
+        $placeholder[] = Craft::t('template-select', 'No template selected');
+
+        // Add placeholder to front of array
+        $filteredTemplates = $placeholder + $filteredTemplates;
 
         // Get our id and namespace
         $id           = Craft::$app->getView()->formatInputId($this->handle);
