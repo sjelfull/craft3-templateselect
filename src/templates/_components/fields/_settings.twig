@@ -21,3 +21,11 @@
     name: 'limitToSubfolder',
     value: field['limitToSubfolder']})
 }}
+
+{{  forms.checkboxField({
+    label: 'Show Friendly Option Values'|t,
+    instructions: 'Show more readable option values (ex: Blog Listing vs. _blogListing.twig)',
+    name: 'friendlyOptionValues',
+    value: 1,
+    checked: field['friendlyOptionValues']})
+}}

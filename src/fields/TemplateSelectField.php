@@ -31,6 +31,7 @@ class TemplateSelectField extends Field
      * @var string
      */
     public $limitToSubfolder = '';
+    public $friendlyOptionValues = '';
 
     // Static Methods
     // =========================================================================
@@ -107,6 +108,7 @@ class TemplateSelectField extends Field
         $templatesPath = $siteTemplatesPath = Craft::$app->path->getSiteTemplatesPath();
 
         $limitToSubfolder = $this->limitToSubfolder;
+        $friendlyOptionValues = $this->friendlyOptionValues;
 
         if ( !empty($limitToSubfolder) ) {
             $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . ltrim(rtrim($limitToSubfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -139,8 +141,22 @@ class TemplateSelectField extends Field
 
             $filenameIncludingSubfolder = ltrim($pathWithoutBase, DIRECTORY_SEPARATOR);
 
-            $filteredTemplates[ $filenameIncludingSubfolder ] = $filenameIncludingSubfolder;
+            $optionValue = $filenameIncludingSubfolder;
+
+            if($friendlyOptionValues)
+            {
+                $optionValue = str_replace('.twig','', $optionValue); //remove '.twig'
+                $optionValue = str_replace('.html','', $optionValue); //remove '.html'
+                $optionValue = str_replace('_','', $optionValue); //remove underscores
+                $optionValue = preg_replace('/(?<!\ )[A-Z]/', ' $0', $optionValue); //add spaces before capital letters
+                $optionValue = ucfirst($optionValue); //capitalize first letter
+            }
+
+            $filteredTemplates[ $filenameIncludingSubfolder ] = $optionValue;
         }
+
+        // Sort alphabetically
+        asort($filteredTemplates);
 
         // Get our id and namespace
         $id           = Craft::$app->getView()->formatInputId($this->handle);
