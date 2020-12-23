@@ -141,6 +141,9 @@ class TemplateSelectField extends Field
 
             $filteredTemplates[ $filenameIncludingSubfolder ] = $filenameIncludingSubfolder;
         }
+		
+		// Sort filtered templates alphabetically, maintaining index -> value association
+		asort(filteredTemplates);
 
         // Get our id and namespace
         $id           = Craft::$app->getView()->formatInputId($this->handle);
