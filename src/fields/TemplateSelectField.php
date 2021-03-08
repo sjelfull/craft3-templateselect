@@ -31,6 +31,7 @@ class TemplateSelectField extends Field
      * @var string
      */
     public $limitToSubfolder = '';
+    public $friendlyOptionValues = '';
 
     // Static Methods
     // =========================================================================
@@ -107,6 +108,7 @@ class TemplateSelectField extends Field
         $templatesPath = $siteTemplatesPath = Craft::$app->path->getSiteTemplatesPath();
 
         $limitToSubfolder = $this->limitToSubfolder;
+        $friendlyOptionValues = $this->friendlyOptionValues;
 
         if ( !empty($limitToSubfolder) ) {
             $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . ltrim(rtrim($limitToSubfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -129,9 +131,6 @@ class TemplateSelectField extends Field
             'caseSensitive' => false,
         ]);
 
-        // Add placeholder for when there is no template selected
-        $filteredTemplates = [ '' => Craft::t('template-select', 'No template selected') ];
-
         // Iterate over template list
         foreach ($templates as $path) {
             $path            = FileHelper::normalizePath($path);
@@ -139,11 +138,31 @@ class TemplateSelectField extends Field
 
             $filenameIncludingSubfolder = ltrim($pathWithoutBase, DIRECTORY_SEPARATOR);
 
-            $filteredTemplates[ $filenameIncludingSubfolder ] = $filenameIncludingSubfolder;
+            $optionValue = $filenameIncludingSubfolder;
+
+            if($friendlyOptionValues)
+            {
+                $optionValue = str_replace('.twig','', $optionValue); //remove '.twig'
+                $optionValue = str_replace('.html','', $optionValue); //remove '.html'
+                $optionValue = str_replace('_','', $optionValue); //remove underscores
+                $optionValue = preg_replace('/(?<!\ )[A-Z]/', ' $0', $optionValue); //add spaces before capital letters
+                $optionValue = ucfirst($optionValue); //capitalize first letter
+            }
+
+            $filteredTemplates[ $filenameIncludingSubfolder ] = $optionValue;
         }
 		
 		// Sort filtered templates alphabetically, maintaining index -> value association
 		asort($filteredTemplates);
+
+        // Sort alphabetically
+        asort($filteredTemplates);
+
+        // Add placeholder for when there is no template selected
+        $placeholder[] = Craft::t('template-select', 'No template selected');
+
+        // Add placeholder to front of array
+        $filteredTemplates = $placeholder + $filteredTemplates;
 
         // Get our id and namespace
         $id           = Craft::$app->getView()->formatInputId($this->handle);
