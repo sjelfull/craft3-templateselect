@@ -16,6 +16,7 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use yii\db\Schema;
+use craft\web\twig\variables\Cp;
 
 /**
  * @author    Superbig
@@ -103,51 +104,23 @@ class TemplateSelectField extends Field
      */
     public function getInputHtml ($value, ElementInterface $element = null): string
     {
-        // Get site templates path
-        $templatesPath = $siteTemplatesPath = Craft::$app->path->getSiteTemplatesPath();
-
-        $limitToSubfolder = $this->limitToSubfolder;
-
-        if ( !empty($limitToSubfolder) ) {
-            $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . ltrim(rtrim($limitToSubfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        }
-        
-        // Normalize the path so it also works as intended in Windows
-        $templatesPath = FileHelper::normalizePath($templatesPath);
-        
-        // Check if folder exists, or give error
-        if ( !file_exists($templatesPath) ) {
-            throw new \InvalidArgumentException('(Template Select) Folder doesn\'t exist: ' . $templatesPath);
-        }
-
-        // Get folder contents
-        $templates = FileHelper::findFiles($templatesPath, [
-            'only'          => [
-                '*.twig',
-                '*.html',
-            ],
-            'caseSensitive' => false,
-        ]);
-
-        // Add placeholder for when there is no template selected
-        $filteredTemplates = [ '' => Craft::t('template-select', 'No template selected') ];
-
-        // Iterate over template list
-        foreach ($templates as $path) {
-            $path            = FileHelper::normalizePath($path);
-            $pathWithoutBase = str_replace($templatesPath, '', $path);
-
-            $filenameIncludingSubfolder = ltrim($pathWithoutBase, DIRECTORY_SEPARATOR);
-
-            $filteredTemplates[ $filenameIncludingSubfolder ] = $filenameIncludingSubfolder;
-        }
-		
-		// Sort filtered templates alphabetically, maintaining index -> value association
-		asort($filteredTemplates);
-
         // Get our id and namespace
         $id           = Craft::$app->getView()->formatInputId($this->handle);
         $namespacedId = Craft::$app->getView()->namespaceInputId($id);
+
+        // Fetch template suggestions and filter out the ones that don't match the subfolder limit (if set)
+        $suggestions  = (new Cp())->getTemplateSuggestions();
+        $filteredSuggestions = [];
+        $limitToSubfolder = $this->limitToSubfolder;
+
+        if ( !empty($limitToSubfolder) ) {
+            foreach ($suggestions[0]["data"] as $suggestion) {
+                if (strpos($suggestion["name"], $limitToSubfolder) !== false) {
+                    $filteredSuggestions[] = $suggestion;
+                }
+            }
+            $suggestions[0]["data"] = $filteredSuggestions;
+        }
 
         // Render the input template
         return Craft::$app->getView()->renderTemplate(
@@ -158,7 +131,7 @@ class TemplateSelectField extends Field
                 'field'        => $this,
                 'id'           => $id,
                 'namespacedId' => $namespacedId,
-                'templates'    => $filteredTemplates,
+                'suggestions'  => $suggestions,
             ]
         );
     }
