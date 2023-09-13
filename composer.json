@@ -1,47 +1,47 @@
 {
-    "name": "superbig/craft3-templateselect",
-    "description": "A fieldtype that allows you to select a template from a dropdown.",
-    "type": "craft-plugin",
-    "version": "3.0.0",
-    "keywords": [
-        "craft",
-        "cms",
-        "craftcms",
-        "craft-plugin",
-        "template select"
-    ],
-    "support": {
-        "docs": "https://github.com/sjelfull/craft3-templateselect/blob/master/README.md",
-        "issues": "https://github.com/sjelfull/craft3-templateselect/issues"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Superbig",
-            "homepage": "https://superbig.co"
-        }
-    ],
-    "require": {
-        "craftcms/cms": "^4.0.0"
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-          "superbig\\templateselect\\": "src/"
-        }
-    },
-    "extra": {
-        "name": "Template Select",
-        "handle": "template-select",
-        "schemaVersion": "4.0.0",
-        "hasCpSettings": false,
-        "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/sjelfull/craft3-templateselect/master/CHANGELOG.md",
-        "class": "superbig\\templateselect\\TemplateSelect"
+  "name": "superbig/craft3-templateselect",
+  "description": "A fieldtype that allows you to select a template from a dropdown.",
+  "type": "craft-plugin",
+  "version": "3.0.1",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "template select"
+  ],
+  "support": {
+    "docs": "https://github.com/sjelfull/craft3-templateselect/blob/master/README.md",
+    "issues": "https://github.com/sjelfull/craft3-templateselect/issues"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Superbig",
+      "homepage": "https://superbig.co"
     }
+  ],
+  "require": {
+    "craftcms/cms": "^4.0.0"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "superbig\\templateselect\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Template Select",
+    "handle": "template-select",
+    "schemaVersion": "4.0.0",
+    "hasCpSettings": false,
+    "hasCpSection": false,
+    "changelogUrl": "https://raw.githubusercontent.com/sjelfull/craft3-templateselect/master/CHANGELOG.md",
+    "class": "superbig\\templateselect\\TemplateSelect"
+  }
 }
