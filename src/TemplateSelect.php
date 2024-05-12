@@ -10,13 +10,10 @@
 
 namespace superbig\templateselect;
 
-
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
-use craft\services\Fields;
 use craft\events\RegisterComponentTypesEvent;
+use craft\services\Fields;
 
 use superbig\templateselect\fields\TemplateSelectField;
 use yii\base\Event;
@@ -31,21 +28,12 @@ use yii\base\Event;
  */
 class TemplateSelect extends Plugin
 {
-    // Static Properties
-    // =========================================================================
-
-    /**
-     * @var TemplateSelect
-     */
-    public static $plugin;
-
-    // Public Methods
-    // =========================================================================
+    public static TemplateSelect $plugin;
 
     /**
      * @inheritdoc
      */
-    public function init ()
+    public function init()
     {
         parent::init();
         self::$plugin = $this;
@@ -53,7 +41,7 @@ class TemplateSelect extends Plugin
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event) {
+            function(RegisterComponentTypesEvent $event) {
                 $event->types[] = TemplateSelectField::class;
             }
         );
@@ -67,8 +55,4 @@ class TemplateSelect extends Plugin
             __METHOD__
         );
     }
-
-    // Protected Methods
-    // =========================================================================
-
 }

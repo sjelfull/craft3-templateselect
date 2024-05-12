@@ -10,11 +10,14 @@
 
 namespace superbig\templateselect\fields;
 
-use craft\helpers\FileHelper;
-
 use Craft;
+
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\helpers\App;
+use craft\helpers\FileHelper;
+use superbig\templateselect\helpers\TemplateHelper;
+use superbig\templateselect\models\Template;
 use yii\db\Schema;
 
 /**
@@ -24,37 +27,28 @@ use yii\db\Schema;
  */
 class TemplateSelectField extends Field
 {
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * @var string
-     */
-    public $limitToSubfolder = '';
-
-    // Static Methods
-    // =========================================================================
+    public string $limitToSubfolder = '';
+    public bool $friendlyOptionValues = true;
 
     /**
      * @inheritdoc
      */
-    public static function displayName (): string
+    public static function displayName(): string
     {
         return Craft::t('template-select', 'Template Select');
     }
 
-    // Public Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
-    public function rules (): array
+    public function rules(): array
     {
         $rules = parent::rules();
         $rules = array_merge($rules, [
             [ 'limitToSubfolder', 'string' ],
             [ 'limitToSubfolder', 'default', 'value' => '' ],
+            [ 'friendlyOptionValues', 'boolean' ],
+            [ 'friendlyOptionValues', 'default', 'value' => true ],
         ]);
 
         return $rules;
@@ -63,7 +57,7 @@ class TemplateSelectField extends Field
     /**
      * @inheritdoc
      */
-    public function getContentColumnType (): string
+    public function getContentColumnType(): string
     {
         return Schema::TYPE_STRING;
     }
@@ -71,23 +65,30 @@ class TemplateSelectField extends Field
     /**
      * @inheritdoc
      */
-    public function normalizeValue ($value, ElementInterface $element = null): mixed
+    public function normalizeValue($value, ElementInterface $element = null): mixed
     {
-        return $value;
+        return Template::create([
+            'template' => $value,
+            'field' => $this,
+        ]);
     }
 
     /**
      * @inheritdoc
      */
-    public function serializeValue ($value, ElementInterface $element = null): mixed
+    public function serializeValue($value, ElementInterface $element = null): mixed
     {
+        if ($value instanceof Template) {
+            $value = $value->template;
+        }
+
         return parent::serializeValue($value, $element);
     }
 
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml (): ?string
+    public function getSettingsHtml(): ?string
     {
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
@@ -101,14 +102,14 @@ class TemplateSelectField extends Field
     /**
      * @inheritdoc
      */
-    public function getInputHtml ($value, ElementInterface $element = null): string
+    public function getInputHtml($value, ElementInterface $element = null): string
     {
         // Get site templates path
-        $templatesPath = $siteTemplatesPath = Craft::$app->path->getSiteTemplatesPath();
+        $templatesPath = Craft::$app->path->getSiteTemplatesPath();
+        $limitToSubfolder = App::parseEnv($this->limitToSubfolder);
+        $friendlyOptionValues = App::parseBooleanEnv($this->friendlyOptionValues);
 
-        $limitToSubfolder = $this->limitToSubfolder;
-
-        if ( !empty($limitToSubfolder) ) {
+        if (!empty($limitToSubfolder)) {
             $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . ltrim(rtrim($limitToSubfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
         
@@ -116,13 +117,17 @@ class TemplateSelectField extends Field
         $templatesPath = FileHelper::normalizePath($templatesPath);
         
         // Check if folder exists, or give error
-        if ( !file_exists($templatesPath) ) {
-            throw new \InvalidArgumentException('(Template Select) Folder doesn\'t exist: ' . $templatesPath);
+        if (!file_exists($templatesPath)) {
+            throw new \InvalidArgumentException(
+                Craft::t('template-select', "Template Select Folder doesn't exist: {folder}", [
+                    'folder' => $templatesPath,
+                ])
+            );
         }
 
         // Get folder contents
         $templates = FileHelper::findFiles($templatesPath, [
-            'only'          => [
+            'only' => [
                 '*.twig',
                 '*.html',
             ],
@@ -130,35 +135,42 @@ class TemplateSelectField extends Field
         ]);
 
         // Add placeholder for when there is no template selected
-        $filteredTemplates = [ '' => Craft::t('template-select', 'No template selected') ];
+        $filteredTemplates = [];
 
         // Iterate over template list
         foreach ($templates as $path) {
-            $path            = FileHelper::normalizePath($path);
+            $path = FileHelper::normalizePath($path);
             $pathWithoutBase = str_replace($templatesPath, '', $path);
-
             $filenameIncludingSubfolder = ltrim($pathWithoutBase, DIRECTORY_SEPARATOR);
+            $optionValue = $filenameIncludingSubfolder;
 
-            $filteredTemplates[ $filenameIncludingSubfolder ] = $filenameIncludingSubfolder;
+            if ($friendlyOptionValues) {
+                $optionValue = TemplateHelper::friendlyTemplateName($optionValue);
+            }
+
+            $filteredTemplates[ $filenameIncludingSubfolder ] = $optionValue;
         }
-		
-		// Sort filtered templates alphabetically, maintaining index -> value association
-		asort($filteredTemplates);
+        
+        // Sort filtered templates alphabetically, maintaining index -> value association
+        asort($filteredTemplates);
+
+        $placeholder[] = Craft::t('template-select', 'No template selected');
+        $filteredTemplates = array_merge($placeholder, $filteredTemplates);
 
         // Get our id and namespace
-        $id           = Craft::$app->getView()->formatInputId($this->handle);
+        $id = Craft::$app->getView()->formatInputId($this->handle);
         $namespacedId = Craft::$app->getView()->namespaceInputId($id);
 
         // Render the input template
         return Craft::$app->getView()->renderTemplate(
             'template-select/_components/fields/_input',
             [
-                'name'         => $this->handle,
-                'value'        => $value,
-                'field'        => $this,
-                'id'           => $id,
+                'name' => $this->handle,
+                'value' => $value,
+                'field' => $this,
+                'id' => $id,
                 'namespacedId' => $namespacedId,
-                'templates'    => $filteredTemplates,
+                'templates' => $filteredTemplates,
             ]
         );
     }
