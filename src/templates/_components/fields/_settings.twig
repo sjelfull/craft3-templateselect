@@ -14,10 +14,22 @@
 
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField({
-    label: 'Limit to subfolder',
-    instructions: 'Optional path of the sub folder, i.e. _subfolder/_',
+{{ forms.autosuggestField({
+    label: 'Limit To Subfolder'|t,
+    instructions: 'Optional path of the subfolder, i.e. _subfolder/subfolder2_. Relative to Craft templates folder.'|t,
     id: 'limitToSubfolder',
     name: 'limitToSubfolder',
-    value: field['limitToSubfolder']})
+    value: field['limitToSubfolder'],
+    suggestEnvVars: true,
+    suggestAliases: true
+})
+}}
+
+{{  forms.booleanMenuField({
+    label: 'Show Friendly Option Values'|t,
+    instructions: 'Show more readable option values (ex: Blog Listing vs. _blogListing.twig)'|t,
+    name: 'friendlyOptionValues',
+    value: field['friendlyOptionValues'],
+    includeEnvVars: true,
+})
 }}

@@ -1,12 +1,12 @@
-# Template Select plugin for Craft CMS 3.x
+# Template Select plugin for Craft CMS
 
 A fieldtype that allows you to select a template from the site templates folder.
 
-![Screenshot](resources/img/field-screenshot@2x.png)
+![Screenshot](resources/img/field-with-friendly.png)
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 4.0 or later.
 
 ## Installation
 
@@ -24,18 +24,57 @@ To install the plugin, follow these instructions.
 
 ## Configuring Template Select
 
-You may limit the template list to a subfolder of the site template folder.
+Create a new field and choose field type Template Select.
 
-The path is relative, i.e. _subfolder/subfolder2/_.
+In the field settings, you can limit the list of available templates to a subfolder of the Craft templates folder. The path is relative, i.e. _subfolder/anotherfolder_. This may also be set to an ENV variable.
 
-![Subfolder](resources/img/field-config@2x.png)
+![Screenshot](resources/img/field-settings.png)
 
-## Using Template Select
+![Screenshot](resources/img/field-without-friendly.png)
 
-If you want to include a template, you may do it like this in your entry template:
+In the field settings, you can choose to make the template names more user friendly. In the field, the list will be improved by changing the following:
+- file extensions will be removed
+- the file names will be capitalized and spaced for readability
+- folders will be separated by ›
+
+![Screenshot](resources/img/field-with-friendly.png)
+
+## Using Template Selector
+
+### Output the chosen template name:
+
+```twig
+{{ entry.fieldHandle }}
+```
+
+### Include/Embed the chosen template:
 
 ```twig
 {% include entry.fieldHandle %}
+```
+
+### Include the template including subfolder if set:
+
+```twig
+{% include entry.fieldHandle.withSubfolder() %}
+```
+
+This is a alias for the following:
+
+```twig
+{{ entry.templateWithSubfolder.template(true) }}
+```
+
+### Output the subfolder name:
+
+```twig
+{{ entry.fieldHandle.subfolder() }}
+```
+
+### Output the filename without path:
+
+```twig
+{{ entry.fieldHandle.filename() }}
 ```
 
 Brought to you by [Superbig](https://superbig.co)
