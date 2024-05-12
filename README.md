@@ -39,7 +39,7 @@ In the field settings, you can choose to make the template names more user frien
 
 ![Screenshot](resources/img/field-with-friendly.png)
 
-## Using Template Selector
+## Using Template Select
 
 ### Output the chosen template name:
 
