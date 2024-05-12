@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0.0 - 2022-10-03
+### Added
+- Made plugin compatible with Craft 5
+- Added support for environment variables in settings 
+- Added `field.subfolder()` method to get subfolder from the field instance 
+- Added `field.withSubfolder()` method to get template path including subfolder if set 
+- Added `field.filename()` method to get the template filename without path 
+
 ## 3.0.0 - 2022-10-03
 ### Added
 - Made plugin compatible with Craft 4
