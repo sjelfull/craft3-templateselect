@@ -4,8 +4,6 @@ namespace superbig\templateselect\models;
 
 use craft\base\Model;
 use craft\helpers\App;
-use craft\helpers\ArrayHelper;
-use Stringy\Stringy;
 use superbig\templateselect\fields\TemplateSelectField;
 
 class Template extends Model
