@@ -62,7 +62,7 @@ In the field settings, you can choose to make the template names more user frien
 This is a alias for the following:
 
 ```twig
-{{ entry.templateWithSubfolder.template(true) }}
+{{ entry.fieldHandle.template(true) }}
 ```
 
 ### Output the subfolder name:
