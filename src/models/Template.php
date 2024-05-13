@@ -16,13 +16,6 @@ class Template extends Model
         return new self($data);
     }
 
-    protected function defineRules(): array
-    {
-        return array_merge(parent::defineRules(), [
-
-        ]);
-    }
-
     public function template(bool $includeSubfolder = false)
     {
         if ($includeSubfolder && !empty($this->subfolder())) {
@@ -47,5 +40,10 @@ class Template extends Model
     public function subfolder(): string|null
     {
         return !empty($this->field->limitToSubfolder) ? App::parseEnv($this->field->limitToSubfolder) : null;
+    }
+
+    public function getMappedValue(): string|null
+    {
+        return $this->field->getMappedValue($this->template);
     }
 }

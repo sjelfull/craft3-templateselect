@@ -14,11 +14,15 @@ use Craft;
 
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\behaviors\EnvAttributeParserBehavior;
 use craft\helpers\App;
+use craft\helpers\ArrayHelper;
 use craft\helpers\FileHelper;
 use superbig\templateselect\helpers\TemplateHelper;
 use superbig\templateselect\models\Template;
+use yii\base\Exception;
 use yii\db\Schema;
+use craft\web\twig\variables\Cp;
 
 /**
  * @author    Superbig
@@ -28,7 +32,7 @@ use yii\db\Schema;
 class TemplateSelectField extends Field
 {
     public string $limitToSubfolder = '';
-    public bool $friendlyOptionValues = true;
+    private bool|string $_friendlyOptionValues = false;
 
     /**
      * @inheritdoc
@@ -47,8 +51,6 @@ class TemplateSelectField extends Field
         $rules = array_merge($rules, [
             [ 'limitToSubfolder', 'string' ],
             [ 'limitToSubfolder', 'default', 'value' => '' ],
-            [ 'friendlyOptionValues', 'boolean' ],
-            [ 'friendlyOptionValues', 'default', 'value' => true ],
         ]);
 
         return $rules;
@@ -79,7 +81,7 @@ class TemplateSelectField extends Field
     public function serializeValue($value, ElementInterface $element = null): mixed
     {
         if ($value instanceof Template) {
-            $value = $value->template;
+            $value = $this->getMappedValue($value->template);
         }
 
         return parent::serializeValue($value, $element);
@@ -95,27 +97,73 @@ class TemplateSelectField extends Field
             'template-select/_components/fields/_settings',
             [
                 'field' => $this,
+                'settings' => $this->getSettings(),
             ]
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getSuggestions(bool $friendlyNames = true)
     {
-        // Get site templates path
-        $templatesPath = Craft::$app->path->getSiteTemplatesPath();
-        $limitToSubfolder = App::parseEnv($this->limitToSubfolder);
-        $friendlyOptionValues = App::parseBooleanEnv($this->friendlyOptionValues);
+        $subfolder = $this->getSubfolder();
+        $suggestions  = (new Cp())->getTemplateSuggestions();
+        $filteredSuggestions = [];
 
-        if (!empty($limitToSubfolder)) {
-            $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . ltrim(rtrim($limitToSubfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        // Fetch template suggestions and filter out the ones that don't match the subfolder limit (if set)
+        foreach ($suggestions[0]["data"] as $suggestion) {
+            if (str_contains($suggestion["name"], $subfolder)) {
+                if ($friendlyNames) {
+                    $suggestion['name'] = TemplateHelper::friendlyTemplateName($suggestion['name']);
+                }
+                $filteredSuggestions[] = $suggestion;
+            }
         }
-        
+
+        $suggestions[0]["data"] = $filteredSuggestions;
+
+        return $suggestions;
+    }
+
+    public function getMappedValue(string|null $value): string|null
+    {
+        return ArrayHelper::getValue($this->getSuggestionsValueMap(), $value);
+    }
+
+    public function getSuggestionsValueMap()
+    {
+        $subfolder = $this->getSubfolder();
+        $suggestions  = (new Cp())->getTemplateSuggestions();
+        $map = [];
+
+        foreach ($suggestions[0]["data"] as $suggestion) {
+            if (str_contains($suggestion["name"], $subfolder)) {
+                // Here we place both versions so we can easily map between the values even if
+                $map[TemplateHelper::friendlyTemplateName($suggestion['name'])] = $suggestion['name'];
+                $map[$suggestion['name']] = TemplateHelper::friendlyTemplateName($suggestion['name']);
+
+                if (!$this->getFriendlyOptionValues()) {
+                    $map[$suggestion['name']] = $suggestion['name'];
+                }
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getTemplatesPath(): string
+    {
+        $templatesPath = Craft::$app->getPath()->getSiteTemplatesPath();
+        $subfolder = $this->getSubfolder();
+
+        if (!empty($subfolder)) {
+            $templatesPath = $templatesPath . DIRECTORY_SEPARATOR . $subfolder . DIRECTORY_SEPARATOR;
+        }
+
         // Normalize the path so it also works as intended in Windows
         $templatesPath = FileHelper::normalizePath($templatesPath);
-        
+
         // Check if folder exists, or give error
         if (!file_exists($templatesPath)) {
             throw new \InvalidArgumentException(
@@ -124,6 +172,26 @@ class TemplateSelectField extends Field
                 ])
             );
         }
+
+        return $templatesPath;
+    }
+
+    public function getSubfolder()
+    {
+        $subfolder = App::parseEnv($this->limitToSubfolder);
+
+        return ltrim(rtrim($subfolder, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getInputHtml($value, ElementInterface $element = null): string
+    {
+        // Get site templates path
+        $templatesPath = $this->getTemplatesPath();
+        $friendlyOptionValues = $this->getFriendlyOptionValues();
+        $suggestions = $this->getSuggestions($friendlyOptionValues);
 
         // Get folder contents
         $templates = FileHelper::findFiles($templatesPath, [
@@ -171,7 +239,43 @@ class TemplateSelectField extends Field
                 'id' => $id,
                 'namespacedId' => $namespacedId,
                 'templates' => $filteredTemplates,
+                'suggestions'  => $suggestions,
             ]
         );
+    }
+
+    public function getFriendlyOptionValues(bool $parse = true)
+    {
+        return $parse ? App::parseBooleanEnv($this->_friendlyOptionValues) : $this->_friendlyOptionValues;
+    }
+
+    public function setFriendlyOptionValues(bool|string $value): void
+    {
+        $this->_friendlyOptionValues = $value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSettings(): array
+    {
+        $settings = parent::getSettings();
+        $settings['friendlyOptionValues'] = $this->getFriendlyOptionValues(false);
+
+        return $settings;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave(bool $isNew): bool {
+        return parent::beforeSave($isNew);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeElementSave(ElementInterface $element, bool $isNew): bool {
+        return parent::beforeElementSave($element, $isNew);
     }
 }

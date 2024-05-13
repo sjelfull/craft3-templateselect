@@ -6,7 +6,7 @@ use Stringy\Stringy;
 
 class TemplateHelper
 {
-    public static ?Stringy $_stringyInstance = null;
+    public const PATH_SEPARATOR = ' › ';
 
     public static function friendlyTemplateName(string $name): string
     {
@@ -17,7 +17,7 @@ class TemplateHelper
             ->replace('.html', '', caseSensitive: false)
             ->replace('_', '', caseSensitive: false)
             ->replace(DIRECTORY_SEPARATOR, " - ")
-            ->replace(' - ', " › ")
+            ->replace(' - ', static::PATH_SEPARATOR)
             ->replace(' - ', " &#8250; ")
             ->titleize();
     }

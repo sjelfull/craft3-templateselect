@@ -19,7 +19,7 @@
     instructions: 'Optional path of the subfolder, i.e. _subfolder/subfolder2_. Relative to Craft templates folder.'|t,
     id: 'limitToSubfolder',
     name: 'limitToSubfolder',
-    value: field['limitToSubfolder'],
+    value: settings.limitToSubfolder,
     suggestEnvVars: true,
     suggestAliases: true
 })
@@ -29,7 +29,8 @@
     label: 'Show Friendly Option Values'|t,
     instructions: 'Show more readable option values (ex: Blog Listing vs. _blogListing.twig)'|t,
     name: 'friendlyOptionValues',
-    value: field['friendlyOptionValues'],
+    value: settings.friendlyOptionValues,
+    errors: field.getErrors('friendlyOptionValues'),
     includeEnvVars: true,
 })
 }}
