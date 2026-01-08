@@ -12,6 +12,7 @@ namespace superbig\templateselect\migrations;
 
 use Craft;
 use craft\db\Migration;
+use superbig\templateselect\fields\TemplateSelectField;
 
 /**
  * m240513_000000_craft5_upgrade migration.
@@ -26,8 +27,8 @@ class m240513_000000_craft5_upgrade extends Migration
      */
     public function safeUp(): bool
     {
-        // Craft 5 upgrade: ensure field types are properly registered
-        // The schemaVersion bump to 5.0.0 will trigger this migration
+        // Craft 5 upgrade: verify field types are registered
+        // The schemaVersion bump to 5.0.0 triggers field re-registration
         
         $projectConfig = Craft::$app->getProjectConfig();
         $muteEvents = $projectConfig->muteEvents;
@@ -41,13 +42,13 @@ class m240513_000000_craft5_upgrade extends Migration
             
             foreach ($fields as $fieldUid => $fieldConfig) {
                 if (isset($fieldConfig['type']) && 
-                    $fieldConfig['type'] === 'superbig\\templateselect\\fields\\TemplateSelectField') {
+                    $fieldConfig['type'] === TemplateSelectField::class) {
                     $count++;
                 }
             }
             
             if ($count > 0) {
-                echo "    > Found {$count} Template Select field(s) - they should now work correctly\n";
+                echo "    > Found {$count} Template Select field(s). The schemaVersion update will ensure they are properly registered.\n";
             }
         } finally {
             $projectConfig->muteEvents = $muteEvents;

@@ -50,6 +50,7 @@ If you need to verify your field values before upgrading, you can find them in y
 
 ```sql
 -- Find all Template Select fields
+-- Note: The type value should match the fully-qualified class name
 SELECT id, name, handle 
 FROM {{%fields}} 
 WHERE type = 'superbig\\templateselect\\fields\\TemplateSelectField';
