@@ -14,10 +14,12 @@
 
 {% import "_includes/forms" as forms %}
 
-{{ forms.selectField({
+{{ forms.autosuggest({
         label: '',
         id: name,
         name: name,
-        options: templates,
-        value: value})
+        value: value,
+        suggestions: suggestions,
+        suggestEnvVars: false,
+        suggestAliases: false})
 }}
