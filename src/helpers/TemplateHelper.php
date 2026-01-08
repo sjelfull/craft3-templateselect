@@ -55,6 +55,8 @@ class TemplateHelper
             $description = trim($matches[1]);
             // Clean up whitespace and newlines
             $description = preg_replace('/\s+/', ' ', $description);
+            // HTML-escape for security
+            $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
             return $description;
         }
 
