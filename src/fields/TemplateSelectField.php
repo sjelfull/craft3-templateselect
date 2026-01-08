@@ -15,7 +15,6 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\helpers\App;
-use craft\web\twig\variables\Cp;
 use superbig\templateselect\models\Template;
 use yii\db\Schema;
 
@@ -105,18 +104,19 @@ class TemplateSelectField extends Field
         $namespacedId = Craft::$app->getView()->namespaceInputId($id);
 
         // Fetch template suggestions and filter out the ones that don't match the subfolder limit (if set)
-        $suggestions = (new Cp())->getTemplateSuggestions();
-        $filteredSuggestions = [];
+        $cp = Craft::$app->getView()->cp;
+        $suggestions = $cp->getTemplateSuggestions();
         $limitToSubfolder = App::parseEnv($this->limitToSubfolder);
 
-        if (!empty($limitToSubfolder)) {
-            // Normalize the subfolder path for comparison
+        if (!empty($limitToSubfolder) && isset($suggestions[0]['data']) && is_array($suggestions[0]['data'])) {
+            // Normalize the subfolder path for comparison (use forward slashes as Craft does)
             $limitToSubfolder = trim($limitToSubfolder, '/\\');
             
+            $filteredSuggestions = [];
             foreach ($suggestions[0]['data'] as $suggestion) {
                 // Check if the template path starts with the limited subfolder
-                if (str_starts_with($suggestion['name'], $limitToSubfolder . '/') || 
-                    str_starts_with($suggestion['name'], $limitToSubfolder . DIRECTORY_SEPARATOR)) {
+                // Craft uses forward slashes for template paths regardless of OS
+                if (str_starts_with($suggestion['name'], $limitToSubfolder . '/')) {
                     $filteredSuggestions[] = $suggestion;
                 }
             }
