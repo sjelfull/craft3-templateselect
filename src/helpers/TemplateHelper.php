@@ -8,6 +8,11 @@ class TemplateHelper
 {
     public static ?Stringy $_stringyInstance = null;
 
+    /**
+     * Maximum bytes to read from template files when extracting descriptions
+     */
+    private const DESCRIPTION_READ_BUFFER_SIZE = 8192;
+
     public static function friendlyTemplateName(string $name): string
     {
         $stringy = Stringy::create($name);
@@ -36,21 +41,16 @@ class TemplateHelper
         }
 
         // Read first few KB to find description (no need to read entire file)
-        $handle = fopen($templatePath, 'r');
-        if ($handle === false) {
-            return null;
-        }
-
-        $content = fread($handle, 8192); // Read first 8KB
-        fclose($handle);
-
+        $content = file_get_contents($templatePath, false, null, 0, self::DESCRIPTION_READ_BUFFER_SIZE);
+        
         if ($content === false) {
             return null;
         }
 
         // Look for {# @description: ... #} pattern
         // Support both single-line and multi-line descriptions
-        $pattern = '/{#\s*@description:\s*([^#]*?)#}/is';
+        // Pattern matches everything between {# @description: and the closing #}
+        $pattern = '/{#\s*@description:\s*(.*?)#}/is';
         if (preg_match($pattern, $content, $matches)) {
             $description = trim($matches[1]);
             // Clean up whitespace and newlines
