@@ -26,7 +26,7 @@ To install the plugin, follow these instructions.
 
 If you're upgrading from Craft 4 to Craft 5 and see an error message like "Unable to find component class 'superbig\\templateselect\\fields\\TemplateSelectField'", follow these steps:
 
-1. Make sure you've updated to the latest version of the plugin (5.0.0 or higher):
+1. Make sure you've updated to the latest version of the plugin (5.0.1 or higher):
 
         composer update superbig/craft3-templateselect
 
@@ -43,6 +43,22 @@ If you're upgrading from Craft 4 to Craft 5 and see an error message like "Unabl
         php craft clear-caches/all
 
 After these steps, your Template Select fields should be restored with all their original values intact.
+
+### Finding Your Old Template Select Field Values
+
+If you need to verify your field values before upgrading, you can find them in your database:
+
+```sql
+-- Find all Template Select fields
+SELECT id, name, handle 
+FROM {{%fields}} 
+WHERE type = 'superbig\\templateselect\\fields\\TemplateSelectField';
+
+-- Find field values for a specific field (replace 'fieldHandle' with your field's handle)
+SELECT * FROM {{%content}} WHERE field_fieldHandle IS NOT NULL;
+```
+
+Template Select fields store simple string values (the template path), so your data is safe and will be restored once the field type is recognized again.
 
 ## Configuring Template Select
 
