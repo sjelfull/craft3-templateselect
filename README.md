@@ -6,7 +6,7 @@ A fieldtype that allows you to select a template from the site templates folder.
 
 ## Requirements
 
-This plugin requires Craft CMS 4.0 or later.
+This plugin requires Craft CMS 5.0 or later.
 
 ## Installation
 
@@ -21,6 +21,28 @@ To install the plugin, follow these instructions.
         composer require superbig/craft3-templateselect
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Template Select.
+
+## Upgrading from Craft 4 to Craft 5
+
+If you're upgrading from Craft 4 to Craft 5 and see an error message like "Unable to find component class 'superbig\\templateselect\\fields\\TemplateSelectField'", follow these steps:
+
+1. Make sure you've updated to the latest version of the plugin (5.0.0 or higher):
+
+        composer update superbig/craft3-templateselect
+
+2. Run migrations to update the plugin schema:
+
+        php craft migrate/all
+
+3. If fields still show as missing, rebuild the project config:
+
+        php craft project-config/rebuild
+
+4. Clear Craft's caches:
+
+        php craft clear-caches/all
+
+After these steps, your Template Select fields should be restored with all their original values intact.
 
 ## Configuring Template Select
 

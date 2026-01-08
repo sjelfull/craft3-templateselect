@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0.1 - 2026-01-08
+### Fixed
+- Fixed issue where Template Select fields would show "Unable to find component class" error after upgrading from Craft 4 to Craft 5
+- Added migration to ensure fields are properly recognized in Craft 5
+- Updated schemaVersion to 5.0.0 to trigger necessary migrations
+- Added upgrade documentation to README
+
 ## 5.0.0 - 2022-10-03
 ### Added
 - Made plugin compatible with Craft 5

@@ -2,7 +2,7 @@
     "name": "superbig/craft3-templateselect",
     "description": "A fieldtype that allows you to select a template from a dropdown.",
     "type": "craft-plugin",
-    "version": "5.0.0",
+    "version": "5.0.1",
     "keywords": [
         "craft",
         "cms",
@@ -43,7 +43,7 @@
     "extra": {
         "name": "Template Select",
         "handle": "template-select",
-        "schemaVersion": "4.0.0",
+        "schemaVersion": "5.0.0",
         "hasCpSettings": false,
         "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/sjelfull/craft3-templateselect/master/CHANGELOG.md",
