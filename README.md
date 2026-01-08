@@ -39,6 +39,44 @@ In the field settings, you can choose to make the template names more user frien
 
 ![Screenshot](resources/img/field-with-friendly.png)
 
+## Adding Descriptions to Templates
+
+You can add descriptions to your templates to help users understand what each template does. This is especially useful when you have many templates to choose from.
+
+To add a description to a template, add a special comment at the beginning of your template file:
+
+```twig
+{# @description: Displays a paginated list of blog posts with thumbnails and excerpts #}
+```
+
+The description will appear in the dropdown next to the template name, making it easier for content editors to select the right template.
+
+**Examples:**
+
+```twig
+{# @description: Contact form with validation and CAPTCHA support #}
+<form method="post">
+    ...
+</form>
+```
+
+```twig
+{# @description: Hero section with background image and call-to-action button #}
+<section class="hero">
+    ...
+</section>
+```
+
+Descriptions can also span multiple lines:
+
+```twig
+{# @description: Complex product grid layout
+   Includes filters, sorting, and pagination
+   Supports up to 4 columns #}
+```
+
+**Note:** Templates without descriptions will still work normally and appear in the dropdown without any description text.
+
 ## Using Template Select
 
 ### Output the chosen template name:

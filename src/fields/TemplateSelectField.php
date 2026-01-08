@@ -148,6 +148,12 @@ class TemplateSelectField extends Field
                 $optionValue = TemplateHelper::friendlyTemplateName($optionValue);
             }
 
+            // Extract description from template file
+            $description = TemplateHelper::extractTemplateDescription($path);
+            if ($description) {
+                $optionValue .= ' — ' . $description;
+            }
+
             $filteredTemplates[ $filenameIncludingSubfolder ] = $optionValue;
         }
         
