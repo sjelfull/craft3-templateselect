@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Added
+- Added support for template descriptions via Twig comment syntax `{# @description: ... #}`
+- Template descriptions now appear in the dropdown selector to help users identify templates
+
 ## 5.0.0 - 2022-10-03
 ### Added
 - Made plugin compatible with Craft 5
