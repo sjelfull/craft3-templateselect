@@ -22,7 +22,7 @@ To install the plugin, follow these instructions.
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Template Select.
 
-## Configuring Template Select
+## Configuring template select
 
 Create a new field and choose field type Template Select.
 
@@ -39,7 +39,7 @@ In the field settings, you can choose to make the template names more user frien
 
 ![Screenshot](resources/img/field-with-friendly.png)
 
-## Adding Descriptions to Templates
+## Adding descriptions to templates
 
 You can add descriptions to your templates to help users understand what each template does. This is especially useful when you have many templates to choose from.
 
@@ -77,7 +77,7 @@ Descriptions can also span multiple lines:
 
 **Note:** Templates without descriptions will still work normally and appear in the dropdown without any description text.
 
-## Using Template Select
+## Using template select
 
 ### Output the chosen template name:
 
