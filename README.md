@@ -1,12 +1,12 @@
 # Template Select plugin for Craft CMS
 
-A fieldtype that allows you to select a template from the site templates folder.
+A fieldtype that allows you to select a template from the site templates folder using Craft's autosuggest component.
 
 ![Screenshot](resources/img/field-with-friendly.png)
 
 ## Requirements
 
-This plugin requires Craft CMS 4.0 or later.
+This plugin requires Craft CMS 5.0 or later.
 
 ## Installation
 
@@ -30,14 +30,7 @@ In the field settings, you can limit the list of available templates to a subfol
 
 ![Screenshot](resources/img/field-settings.png)
 
-![Screenshot](resources/img/field-without-friendly.png)
-
-In the field settings, you can choose to make the template names more user friendly. In the field, the list will be improved by changing the following:
-- file extensions will be removed
-- the file names will be capitalized and spaced for readability
-- folders will be separated by ›
-
-![Screenshot](resources/img/field-with-friendly.png)
+The field uses Craft's built-in autosuggest component, providing an improved UI with autocomplete and search functionality for template selection.
 
 ## Using Template Select
 
