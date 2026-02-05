@@ -6,7 +6,6 @@ use craft\helpers\StringHelper;
 
 class TemplateHelper
 {
-
     /**
      * Maximum bytes to read from template files when extracting descriptions
      */
@@ -14,7 +13,6 @@ class TemplateHelper
 
     public static function friendlyTemplateName(string $name): string
     {
-
         $name = preg_replace('/\.(twig|html)$/i', '', $name);
 
         $name = str_replace('_', ' ', $name);
