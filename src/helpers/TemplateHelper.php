@@ -2,11 +2,10 @@
 
 namespace superbig\templateselect\helpers;
 
-use Stringy\Stringy;
+use craft\helpers\StringHelper;
 
 class TemplateHelper
 {
-    public static ?Stringy $_stringyInstance = null;
 
     /**
      * Maximum bytes to read from template files when extracting descriptions
@@ -15,16 +14,16 @@ class TemplateHelper
 
     public static function friendlyTemplateName(string $name): string
     {
-        $stringy = Stringy::create($name);
 
-        return $stringy
-            ->replace('.twig', '', caseSensitive: false)
-            ->replace('.html', '', caseSensitive: false)
-            ->replace('_', '', caseSensitive: false)
-            ->replace(DIRECTORY_SEPARATOR, " - ")
-            ->replace(' - ', " › ")
-            ->replace(' - ', " &#8250; ")
-            ->titleize();
+        $name = preg_replace('/\.(twig|html)$/i', '', $name);
+
+        $name = str_replace('_', ' ', $name);
+
+        $name = str_replace(DIRECTORY_SEPARATOR, ' › ', $name);
+
+        $name = preg_replace('/\s+/', ' ', $name);
+
+        return StringHelper::toTitleCase(trim($name));
     }
 
     /**
@@ -42,7 +41,7 @@ class TemplateHelper
 
         // Read first few KB to find description (no need to read entire file)
         $content = file_get_contents($templatePath, false, null, 0, self::DESCRIPTION_READ_BUFFER_SIZE);
-        
+
         if ($content === false) {
             return null;
         }
