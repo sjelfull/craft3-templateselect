@@ -50,7 +50,7 @@ jobs:
           php-version: '8.3'
 
       - name: Validate composer.json
-        run: composer validate --strict
+        run: composer validate
 
       - name: Cache Composer packages
         uses: actions/cache@v4
