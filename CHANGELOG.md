@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
+
+## 5.0.1 - 2026-02-16
+### Fixed
+- Fixed fatal error in Craft 5.9+ caused by removal of Stringy from craftcms/cms — replaced `Stringy\Stringy` with Craft's native `StringHelper` ([#21](https://github.com/sjelfull/craft3-templateselect/pull/21))
+
 ### Added
 - Added support for template descriptions via Twig comment syntax `{# @description: ... #}`
 - Template descriptions now appear in the dropdown selector to help users identify templates
