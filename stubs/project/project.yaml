@@ -1,0 +1,27 @@
+dateModified: 1755877515
+email:
+  fromEmail: hi@superbig.dev
+  fromName: 'Template Select'
+  transportType: craft\mail\transportadapters\Sendmail
+meta:
+  __names__:
+    08cf53bc-9c73-4602-aad2-ce7a0f84c80a: 'Template Select Test'
+    892e4ee8-6251-45a9-9ad9-04d29a9373e2: 'Template Select Test'
+plugins:
+  template-select:
+    edition: standard
+    enabled: true
+    schemaVersion: 4.0.0
+system:
+  edition: pro
+  live: true
+  name: 'Template Select Test'
+  schemaVersion: 5.9.0.8
+  timeZone: Europe/Amsterdam
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  require2fa: false
+  requireEmailVerification: true
